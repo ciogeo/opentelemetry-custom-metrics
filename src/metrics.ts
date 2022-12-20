@@ -12,7 +12,7 @@ export class Metrics {
   protected intrumentation = new Map();
 
   constructor() {
-    this.meter = otel.metrics.getMeter("notification-service");
+    this.meter = otel.metrics.getMeter("opentelemetry-custom-metrics");
   }
 
   public addInstrumentation(type: string, name: string): MetricInterface {

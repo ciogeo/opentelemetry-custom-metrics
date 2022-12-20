@@ -19,7 +19,7 @@ const metric_type_1 = require("./metric.type");
 let Metrics = class Metrics {
     constructor() {
         this.intrumentation = new Map();
-        this.meter = api_1.default.metrics.getMeter("notification-service");
+        this.meter = api_1.default.metrics.getMeter("opentelemetry-custom-metrics");
     }
     addInstrumentation(type, name) {
         if (type === metric_type_1.MetricType.COUNTER) {
