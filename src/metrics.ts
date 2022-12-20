@@ -1,3 +1,4 @@
+import { Injectable } from '@nestjs/common';
 import otel, { Meter } from "@opentelemetry/api";
 import { CounterMetricService } from "./counter-metric.service";
 import { GaugeMetriService } from "./gauge-metric.service";
@@ -5,6 +6,7 @@ import { HistogramMetricService } from "./histogram-metric.service";
 import { MetricInterface } from "./metric.interface";
 import { MetricType } from "./metric.type";
 
+@Injectable()
 export class Metrics {
   protected meter: Meter;
   protected intrumentation = new Map();
