@@ -14,4 +14,5 @@ __exportStar(require("./app.module"), exports);
 __exportStar(require("./metrics"), exports);
 __exportStar(require("./metric.type"), exports);
 __exportStar(require("./metric.interface"), exports);
+__exportStar(require("./interceptors/time-to-process.interceptor"), exports);
 //# sourceMappingURL=index.js.map
