@@ -12,4 +12,5 @@ var __exportStar = (this && this.__exportStar) || function(m, exports) {
 Object.defineProperty(exports, "__esModule", { value: true });
 __exportStar(require("./metrics"), exports);
 __exportStar(require("./metric.type"), exports);
+__exportStar(require("./metric.interface"), exports);
 //# sourceMappingURL=index.js.map
