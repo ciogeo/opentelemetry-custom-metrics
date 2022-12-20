@@ -1,6 +1,6 @@
 {
   "name": "opentelemetry-custom-metrics",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Allows you to add custom opentelemetry metrics in your application",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
@@ -31,7 +31,9 @@
     "access": "public"
   },
   "release": {
-    "branches": ["main"]
+    "branches": [
+      "main"
+    ]
   },
   "homepage": "https://github.com/ciogeo/opentelemetry-custom-metrics#readme"
 }
