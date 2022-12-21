@@ -6,20 +6,22 @@ export function AccessMetric() {
     propertyKey: string,
     descriptor: PropertyDescriptor
   ) {
+    const className = target.constructor.name;
+    const handlerName = propertyKey;
     const originalMethod = descriptor.value;
 
-    descriptor.value = function (...args: any[]) {
-      const result = originalMethod.apply(this, args);
-      const className = target.constructor.name;
-      const handlerName = propertyKey;
+    descriptor.value = new Proxy(originalMethod, {
+        apply: function (target, thisArg, args) {
+            const result = target.apply(thisArg, args);
 
-      const accessCounter = addCounter(`${className}_${handlerName}_counter`, {
-        description: `Number of times ${className}.${handlerName} was called`,
-      });
-      accessCounter.observe(1);
+            const accessCounter = addCounter(`${className}_${handlerName}_counter`, {
+                description: `Number of times ${className}.${handlerName} was called`,
+            });
+            accessCounter.observe(1);
 
-      return result;
-    };
+            return result;
+        }
+    });
 
     return descriptor;
   };

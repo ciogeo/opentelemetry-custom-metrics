@@ -6,36 +6,37 @@ export function TimeToProcessMetric() {
     propertyKey: string,
     descriptor: PropertyDescriptor
   ) {
+    const className = target.constructor.name;
+    const handlerName = propertyKey;
     const originalMethod = descriptor.value;
 
-    descriptor.value = function (...args: any[]) {
-      const start = Date.now();
+    descriptor.value = new Proxy(originalMethod, {
+      apply: function (target, thisArg, args) {
+        const start = Date.now();
 
-      const result = originalMethod.apply(this, args);
+        const result = target.apply(thisArg, args);
 
-      const duration = Date.now() - start;
+        const duration = Date.now() - start;
 
-      const className = target.constructor.name;
-      const handlerName = propertyKey;
+        const timeToProcessHistogram = addHistogram(
+          `${className}_${handlerName}_histogram`,
+          {
+            description: `Time to process ${className}.${handlerName}`,
+          }
+        );
+        timeToProcessHistogram.observe(duration);
 
-      const timeToProcessHistogram = addHistogram(
-        `${className}_${handlerName}_histogram`,
-        {
-          description: `Time to process ${className}.${handlerName}`,
-        }
-      );
-      timeToProcessHistogram.observe(duration);
+        const timeToProcessGauge = addObservableGauge(
+          `${className}_${handlerName}_gauge`,
+          {
+            description: `Time to process ${className}.${handlerName}`,
+          }
+        );
+        timeToProcessGauge.observe(duration);
 
-      const timeToProcessGauge = addObservableGauge(
-        `${className}_${handlerName}_gauge`,
-        {
-          description: `Time to process ${className}.${handlerName}`,
-        }
-      );
-      timeToProcessGauge.observe(duration);
-
-      return result;
-    };
+        return result;
+      },
+    });
 
     return descriptor;
   };
