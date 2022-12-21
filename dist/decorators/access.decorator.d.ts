@@ -1,1 +1,1 @@
-export declare const AccessMetric: (target: Object, propertyKey: string, descriptor: PropertyDescriptor) => PropertyDescriptor;
+export declare function AccessMetric(): (target: Object, propertyKey: string, descriptor: PropertyDescriptor) => PropertyDescriptor;
