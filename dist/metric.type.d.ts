@@ -1,5 +1,5 @@
 export declare enum MetricType {
-    COUNTER = "counter",
-    HISTOGRAM = "histogram",
-    OBSERVABLE_GAUGE = "observable_gauge"
+    COUNTER = "COUNTER",
+    HISTOGRAM = "HISTOGRAM",
+    OBSERVABLE_GAUGE = "OBSERVABLE_GAUGE"
 }
