@@ -16,17 +16,17 @@ import { OpenTelemetryCustomMetricsModule } from 'opentelemetry-custom-metrics';
 
 app.controller.ts
 ```
-import { AccessMetricInterceptor, TimeToProcessMetricInterceptor } from 'opentelemetry-custom-metrics';
+import { AccessMetric, TimeToProcessMetric } from 'opentelemetry-custom-metrics';
 ```
 
 ```
-@UseInterceptors(AccessMetricInterceptor)
-@UseInterceptors(TimeToProcessMetricInterceptor)
+@AccessMetric
+@TimeToProcessMetric
 ```
 
-### Available interceptors:
-AccessMetricInterceptor - counts the number of times a method is called
-TimeToProcessMetricInterceptor - exposes a gauge and a histogram with the time it took to process the method
+### Available decorators:
+AccessMetric - counts the number of times a method is called
+TimeToProcessMetric - exposes a gauge and a histogram with the time it took to process the method
 
 ### Build your own custom metrics
 
@@ -34,9 +34,9 @@ TimeToProcessMetricInterceptor - exposes a gauge and a histogram with the time i
 import { MetricService, MetricType } from 'opentelemetry-custom-metrics';
 
 constructor(private metricService: MetricService) {
-    this.metricService.addInstrumentation(MetricType.COUNTER, 'my_counter');
-    this.metricService.addInstrumentation(MetricType.HISTOGRAM, 'my_histogram');
-    this.metricService.addInstrumentation(MetricType.GAUGE, 'my_gauge');
+    this.metricService.addCounter('my_counter');
+    this.metricService.addHistogram('my_histogram');
+    this.metricService.addObservableGauge('my_gauge');
 }
 
 handle() {

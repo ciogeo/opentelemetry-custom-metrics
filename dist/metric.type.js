@@ -5,6 +5,6 @@ var MetricType;
 (function (MetricType) {
     MetricType["COUNTER"] = "counter";
     MetricType["HISTOGRAM"] = "histogram";
-    MetricType["GAUGE"] = "gauge";
+    MetricType["OBSERVABLE_GAUGE"] = "observable_gauge";
 })(MetricType = exports.MetricType || (exports.MetricType = {}));
 //# sourceMappingURL=metric.type.js.map

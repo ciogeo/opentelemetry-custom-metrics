@@ -1,10 +1,7 @@
 import { Injectable } from "@nestjs/common";
-import otel, { Meter } from "@opentelemetry/api";
-import { CounterMetricService } from "./counter-metric.service";
-import { GaugeMetriService } from "./gauge-metric.service";
-import { HistogramMetricService } from "./histogram-metric.service";
-import { MetricInterface } from "./metric.interface";
-import { MetricType } from "./metric.type";
+import otel, { Meter, MetricAttributes } from "@opentelemetry/api";
+import { MetricInterface } from "./metrics/metric.interface";
+import { addCounter, addHistogram, addObservableGauge, observe } from "./metric.functions";
 
 @Injectable()
 export class MetricService {
@@ -15,30 +12,19 @@ export class MetricService {
     this.meter = otel.metrics.getMeter("opentelemetry-custom-metrics");
   }
 
-  public addInstrumentation(type: string, name: string): MetricInterface {
-    if (type === MetricType.COUNTER) {
-      this.intrumentation.set(name, new CounterMetricService(this.meter, name));
-    } else if (type === MetricType.HISTOGRAM) {
-      this.intrumentation.set(
-        name,
-        new HistogramMetricService(this.meter, name)
-      );
-    } else if (type === MetricType.GAUGE) {
-      this.intrumentation.set(name, new GaugeMetriService(this.meter, name));
-    }
+  public addCounter(name: string, options?: MetricAttributes): MetricInterface {
+    return addCounter(name, options);
+  }
 
-    if (!this.intrumentation.has(name)) {
-      throw new Error(`Instrumentation ${name} not found`);
-    }
+  public addHistogram(name: string, options?: MetricAttributes): MetricInterface {
+    return addHistogram(name, options);
+  }
 
-    return this.intrumentation.get(name);
+  public addObservableGauge(name: string, options?: MetricAttributes): MetricInterface {
+    return addObservableGauge(name, options);
   }
 
   public observe(name: string, value: number): void {
-    if (!this.intrumentation.has(name)) {
-      throw new Error(`Instrumentation ${name} not found`);
-    }
-
-    this.intrumentation.get(name).observe(value);
+    return observe(name, value);
   }
 }
