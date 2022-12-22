@@ -60,7 +60,7 @@ import { OpenTelemetryCustomMetricsModule } from 'opentelemetry-custom-metrics';
 ...
 ```
 
-### Add interceptors to your methods
+### Add decorators to your methods
 
 app.controller.ts
 ```
@@ -70,12 +70,13 @@ import { AccessMetric, TimeToProcessMetric } from 'opentelemetry-custom-metrics'
 ```
 @AccessMetric
 @TimeToProcessMetric
+public async handle(): Promise<void> {
 ```
 
 ### Available decorators:
 
 AccessMetric - counts the number of times a method is called
-TimeToProcessMetric - exposes a gauge and a histogram with the time it took to process the method
+TimeToProcessMetric - exposes a gauge and a histogram with the time it took to process the method (time spent on async calls is not included)
 
 ### Add your own custom metrics
 
