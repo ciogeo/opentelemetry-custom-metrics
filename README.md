@@ -72,15 +72,15 @@ import { AccessMetric, TimeToProcessMetric } from 'opentelemetry-custom-metrics'
 ```
 
 ```
-@AccessMetric
-@TimeToProcessMetric
+@AccessMetric()
+@TimeToProcessMetric()
 public async handle(): Promise<void> {
 ```
 
 ### Available decorators:
 
-AccessMetric - counts the number of times a method is called  
-TimeToProcessMetric - exposes a gauge and a histogram with the time it took to process the method (time spent on async calls is not included)  
+@AccessMetric() - counts the number of times a method is called  
+@TimeToProcessMetric() - exposes a gauge and a histogram with the time it took to process the method (time spent on async calls is not included)  
 
 ### Add your own custom metrics
 
