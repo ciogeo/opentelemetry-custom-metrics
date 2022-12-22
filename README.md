@@ -1,10 +1,56 @@
 # Opentelemetry Custom Metrics for NestJS
 
+## Install
+
+```
+npm install @opentelemetry/api
+npm install @opentelemetry/api
+npm install @opentelemetry/sdk-node
+npm install opentelemetry-custom-metrics
+``` 
+
 ## Usage
 
-### Add interceptors to your Controller methods
+### Create otelSDK.ts file
 
-app.module.ts
+```
+import * as process from 'process';
+import { NodeSDK } from '@opentelemetry/sdk-node';
+import { PrometheusExporter } from '@opentelemetry/exporter-prometheus';
+import { AsyncLocalStorageContextManager } from '@opentelemetry/context-async-hooks';
+
+const otelSDK = new NodeSDK({
+    metricReader: new PrometheusExporter({
+        port: 9090,
+    }),
+    contextManager: new AsyncLocalStorageContextManager(),
+});
+
+export default otelSDK;
+
+process.on('SIGTERM', () => {
+    otelSDK
+        .shutdown()
+        .then(
+            () => console.log('SDK shut down successfully'),
+            (err) => console.log('Error shutting down SDK', err),
+        )
+        .finally(() => process.exit(0));
+});
+```
+
+### Add otelSDK to your main.ts
+
+```
+import otelSDK from './tracing';
+
+async function bootstrap() {
+    await otelSDK.start();
+    ...
+```
+
+### Import OpenTelemetryCustomMetricsModule in your app.module.ts
+
 ```
 import { OpenTelemetryCustomMetricsModule } from 'opentelemetry-custom-metrics';
 
@@ -13,6 +59,8 @@ import { OpenTelemetryCustomMetricsModule } from 'opentelemetry-custom-metrics';
         OpenTelemetryCustomMetricsModule.forRootAsync(),
 ...
 ```
+
+### Add interceptors to your methods
 
 app.controller.ts
 ```
@@ -25,10 +73,11 @@ import { AccessMetric, TimeToProcessMetric } from 'opentelemetry-custom-metrics'
 ```
 
 ### Available decorators:
+
 AccessMetric - counts the number of times a method is called
 TimeToProcessMetric - exposes a gauge and a histogram with the time it took to process the method
 
-### Build your own custom metrics
+### Add your own custom metrics
 
 ```
 import { MetricService, MetricType } from 'opentelemetry-custom-metrics';
