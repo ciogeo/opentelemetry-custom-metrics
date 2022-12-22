@@ -3,11 +3,15 @@
 ## Install
 
 ```
-npm install @opentelemetry/api
-npm install @opentelemetry/api
-npm install @opentelemetry/sdk-node
-npm install opentelemetry-custom-metrics
+npm i opentelemetry-custom-metrics --save
 ``` 
+
+Other required dependencies:
+```
+@opentelemetry/api
+@opentelemetry/sdk-node
+@opentelemetry/exporter-prometheus
+```
 
 ## Usage
 
