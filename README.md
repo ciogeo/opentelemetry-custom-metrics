@@ -42,7 +42,7 @@ process.on('SIGTERM', () => {
 ### Add otelSDK to your main.ts
 
 ```
-import otelSDK from './tracing';
+import otelSDK from './otelSDK';
 
 async function bootstrap() {
     await otelSDK.start();
