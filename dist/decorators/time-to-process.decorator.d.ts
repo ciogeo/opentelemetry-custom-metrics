@@ -1,1 +1,1 @@
-export declare function TimeToProcessMetric(): (target: Object, propertyKey: string, descriptor: PropertyDescriptor) => PropertyDescriptor;
+export declare function TimeToProcessMetric(): MethodDecorator;

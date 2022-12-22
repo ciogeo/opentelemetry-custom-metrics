@@ -10,18 +10,17 @@ export function AccessMetric() {
     const handlerName = propertyKey;
     const originalMethod = descriptor.value;
 
-    descriptor.value = new Proxy(originalMethod, {
-        apply: function (target, thisArg, args) {
-            const result = target.apply(thisArg, args);
+    descriptor.value = async function (...args: any[]) {
+      const descriptorThis = this;
+      const result = await originalMethod.apply(descriptorThis, args);
 
-            const accessCounter = addCounter(`${className}_${handlerName}_counter`, {
-                description: `Number of times ${className}.${handlerName} was called`,
-            });
-            accessCounter.observe(1);
+      const accessCounter = addCounter(`${className}_${handlerName}_counter`, {
+        description: `Number of times ${className}.${handlerName} was called`,
+      });
+      accessCounter.observe(1);
 
-            return result;
-        }
-    });
+      return result;
+    };
 
     return descriptor;
   };

@@ -1,11 +1,11 @@
 import otel, { Meter, MetricAttributes } from "@opentelemetry/api";
+import { OPENTELEMETRY_CUSTOM_METRICS } from "./constants";
 import { MetricType } from "./metric.type";
 import { CounterMetricService } from "./metrics/counter-metric.service";
 import { HistogramMetricService } from "./metrics/histogram-metric.service";
 import { MetricInterface } from "./metrics/metric.interface";
 import { ObservableGaugeMetriService } from "./metrics/observable-gauge-metric.service";
 
-export const meter = otel.metrics.getMeter("opentelemetry-custom-metrics");
 export const intrumentation = new Map();
 
 export function addCounter(name: string, options?: MetricAttributes): MetricInterface {
@@ -32,6 +32,8 @@ function addInstrumentation(type: string, name: string, options?: MetricAttribut
   if (intrumentation.has(name)) {
     return intrumentation.get(name);
   }
+
+  const meter = otel.metrics.getMeterProvider().getMeter(OPENTELEMETRY_CUSTOM_METRICS);
 
   if (type === MetricType.COUNTER) {
     intrumentation.set(name, new CounterMetricService(meter, name, options));

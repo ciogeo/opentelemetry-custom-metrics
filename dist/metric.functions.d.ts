@@ -1,6 +1,5 @@
-import { Meter, MetricAttributes } from "@opentelemetry/api";
+import { MetricAttributes } from "@opentelemetry/api";
 import { MetricInterface } from "./metrics/metric.interface";
-export declare const meter: Meter;
 export declare const intrumentation: Map<any, any>;
 export declare function addCounter(name: string, options?: MetricAttributes): MetricInterface;
 export declare function addHistogram(name: string, options?: MetricAttributes): MetricInterface;

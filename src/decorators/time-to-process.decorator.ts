@@ -1,6 +1,10 @@
-import { addHistogram, addObservableGauge } from "../metric.functions";
+import {
+  addCounter,
+  addHistogram,
+  addObservableGauge,
+} from "../metric.functions";
 
-export function TimeToProcessMetric() {
+export function TimeToProcessMetric(): MethodDecorator {
   return function (
     target: Object,
     propertyKey: string,
@@ -10,33 +14,30 @@ export function TimeToProcessMetric() {
     const handlerName = propertyKey;
     const originalMethod = descriptor.value;
 
-    descriptor.value = new Proxy(originalMethod, {
-      apply: function (target, thisArg, args) {
-        const start = Date.now();
+    descriptor.value = async function (...args: any[]) {
+      const descriptorThis = this;
+      const start = Date.now();
+      const result = await originalMethod.apply(descriptorThis, args);
+      const duration = Date.now() - start;
 
-        const result = target.apply(thisArg, args);
+      const timeToProcessHistogram = addHistogram(
+        `${className}_${handlerName}_histogram`,
+        {
+          description: `Time to process ${className}.${handlerName}`,
+        }
+      );
+      timeToProcessHistogram.observe(duration);
 
-        const duration = Date.now() - start;
+      const timeToProcessGauge = addObservableGauge(
+        `${className}_${handlerName}_gauge`,
+        {
+          description: `Time to process ${className}.${handlerName}`,
+        }
+      );
+      timeToProcessGauge.observe(duration);
 
-        const timeToProcessHistogram = addHistogram(
-          `${className}_${handlerName}_histogram`,
-          {
-            description: `Time to process ${className}.${handlerName}`,
-          }
-        );
-        timeToProcessHistogram.observe(duration);
-
-        const timeToProcessGauge = addObservableGauge(
-          `${className}_${handlerName}_gauge`,
-          {
-            description: `Time to process ${className}.${handlerName}`,
-          }
-        );
-        timeToProcessGauge.observe(duration);
-
-        return result;
-      },
-    });
+      return result;
+    };
 
     return descriptor;
   };
