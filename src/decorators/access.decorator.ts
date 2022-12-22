@@ -14,7 +14,7 @@ export function AccessMetric() {
       const descriptorThis = this;
       const result = await originalMethod.apply(descriptorThis, args);
 
-      const accessCounter = addCounter(`${className}_${handlerName}_counter`, {
+      const accessCounter = addCounter(`${className}_${handlerName}_access_counter`, {
         description: `Number of times ${className}.${handlerName} was called`,
       });
       accessCounter.observe(1);

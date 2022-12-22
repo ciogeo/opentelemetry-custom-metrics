@@ -1,5 +1,4 @@
 import {
-  addCounter,
   addHistogram,
   addObservableGauge,
 } from "../metric.functions";
@@ -21,7 +20,7 @@ export function TimeToProcessMetric(): MethodDecorator {
       const duration = Date.now() - start;
 
       const timeToProcessHistogram = addHistogram(
-        `${className}_${handlerName}_histogram`,
+        `${className}_${handlerName}_time_histogram`,
         {
           description: `Time to process ${className}.${handlerName}`,
         }
@@ -29,7 +28,7 @@ export function TimeToProcessMetric(): MethodDecorator {
       timeToProcessHistogram.observe(duration);
 
       const timeToProcessGauge = addObservableGauge(
-        `${className}_${handlerName}_gauge`,
+        `${className}_${handlerName}_time_gauge`,
         {
           description: `Time to process ${className}.${handlerName}`,
         }

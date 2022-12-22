@@ -10,7 +10,7 @@ function AccessMetric() {
         descriptor.value = async function (...args) {
             const descriptorThis = this;
             const result = await originalMethod.apply(descriptorThis, args);
-            const accessCounter = metric_functions_1.addCounter(`${className}_${handlerName}_counter`, {
+            const accessCounter = metric_functions_1.addCounter(`${className}_${handlerName}_access_counter`, {
                 description: `Number of times ${className}.${handlerName} was called`,
             });
             accessCounter.observe(1);

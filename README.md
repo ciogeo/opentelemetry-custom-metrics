@@ -79,8 +79,8 @@ public async handle(): Promise<void> {
 
 ### Available decorators:
 
-AccessMetric - counts the number of times a method is called
-TimeToProcessMetric - exposes a gauge and a histogram with the time it took to process the method (time spent on async calls is not included)
+AccessMetric - counts the number of times a method is called  
+TimeToProcessMetric - exposes a gauge and a histogram with the time it took to process the method (time spent on async calls is not included)  
 
 ### Add your own custom metrics
 
@@ -100,3 +100,5 @@ handle() {
     this.metricService.observe('my_gauge', 10);
 }
 ```
+
+Go to http://localhost:9090/metrics to see the metrics

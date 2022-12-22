@@ -12,11 +12,11 @@ function TimeToProcessMetric() {
             const start = Date.now();
             const result = await originalMethod.apply(descriptorThis, args);
             const duration = Date.now() - start;
-            const timeToProcessHistogram = metric_functions_1.addHistogram(`${className}_${handlerName}_histogram`, {
+            const timeToProcessHistogram = metric_functions_1.addHistogram(`${className}_${handlerName}_time_histogram`, {
                 description: `Time to process ${className}.${handlerName}`,
             });
             timeToProcessHistogram.observe(duration);
-            const timeToProcessGauge = metric_functions_1.addObservableGauge(`${className}_${handlerName}_gauge`, {
+            const timeToProcessGauge = metric_functions_1.addObservableGauge(`${className}_${handlerName}_time_gauge`, {
                 description: `Time to process ${className}.${handlerName}`,
             });
             timeToProcessGauge.observe(duration);
