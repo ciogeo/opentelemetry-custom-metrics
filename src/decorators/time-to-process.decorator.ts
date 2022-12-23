@@ -1,6 +1,7 @@
+import { MetricOptions } from '@opentelemetry/api';
 import { addHistogram, addObservableGauge } from '../metric.functions';
 
-export function TimeToProcessMetric(): MethodDecorator {
+export function TimeToProcessMetric(name?: string, options?: MetricOptions): MethodDecorator {
     return function (target: Object, propertyKey: string, descriptor: PropertyDescriptor) {
         const className = target.constructor.name;
         const handlerName = propertyKey;
@@ -11,14 +12,20 @@ export function TimeToProcessMetric(): MethodDecorator {
             const result = await originalMethod.apply(this, args);
             const duration = Date.now() - start;
 
-            const timeToProcessHistogram = addHistogram(`${className}_${handlerName}_time_histogram`, {
-                description: `Time to process ${className}.${handlerName}`,
-            });
+            if (!name) {
+                name = `${className}_${handlerName}_time`;
+            }
+
+            if (!options) {
+                options = {
+                    description: `Time to process ${className}.${handlerName}`,
+                };
+            }
+
+            const timeToProcessHistogram = addHistogram(`${name}_histogram`, options);
             timeToProcessHistogram.observe(duration);
 
-            const timeToProcessGauge = addObservableGauge(`${className}_${handlerName}_time_gauge`, {
-                description: `Time to process ${className}.${handlerName}`,
-            });
+            const timeToProcessGauge = addObservableGauge(`${name}_gauge`, options);
             timeToProcessGauge.observe(duration);
 
             return result;

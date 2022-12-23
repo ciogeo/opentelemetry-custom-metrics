@@ -1,1 +1,2 @@
-export declare function AccessMetric(): (target: Object, propertyKey: string, descriptor: PropertyDescriptor) => PropertyDescriptor;
+import { MetricOptions } from '@opentelemetry/api';
+export declare function AccessMetric(name?: string, options?: MetricOptions): MethodDecorator;
