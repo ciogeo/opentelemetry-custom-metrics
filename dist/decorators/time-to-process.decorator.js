@@ -12,11 +12,11 @@ function TimeToProcessMetric(name, options) {
             const result = await originalMethod.apply(this, args);
             const duration = Date.now() - start;
             if (!name) {
-                name = `${className}_${handlerName}_access_counter`;
+                name = `${className}_${handlerName}_time`;
             }
             if (!options) {
                 options = {
-                    description: `Number of times ${className}.${handlerName} was called`,
+                    description: `Time to process ${className}.${handlerName}`,
                 };
             }
             const timeToProcessHistogram = metric_functions_1.addHistogram(`${name}_histogram`, options);
