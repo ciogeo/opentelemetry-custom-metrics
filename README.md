@@ -90,14 +90,20 @@ import { MetricService, MetricType } from 'opentelemetry-custom-metrics';
 constructor(private metricService: MetricService) {
     this.metricService.addCounter('my_counter');
     this.metricService.addHistogram('my_histogram');
-    this.metricService.addObservableGauge('my_gauge');
+    this.metricService.addObservableCounter('my_observable_counter');
+    this.metricService.addObservableGauge('my_observable_gauge');
+    this.metricService.addUpDownCounter('my_up_down_counter');
+    this.metricService.addObservableUpDownCounter('my_observable_up_down_counter');
 }
 
 handle() {
     ...
     this.metricService.observe('my_counter', 1);
     this.metricService.observe('my_histogram', 10);
-    this.metricService.observe('my_gauge', 10);
+    this.metricService.observe('my_observable_counter', 1);
+    this.metricService.observe('my_observable_gauge', 10);
+    this.metricService.observe('my_up_down_counter', 1);
+    this.metricService.observe('my_observable_up_down_counter', 1);
 }
 ```
 

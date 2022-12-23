@@ -1,30 +1,43 @@
-import { Injectable } from "@nestjs/common";
-import otel, { Meter, MetricAttributes } from "@opentelemetry/api";
-import { MetricInterface } from "./metrics/metric.interface";
-import { addCounter, addHistogram, addObservableGauge, observe } from "./metric.functions";
+import { Injectable } from '@nestjs/common';
+import { MetricOptions } from '@opentelemetry/api';
+import { MetricInterface } from './metrics/metric.interface';
+import {
+    addCounter,
+    addHistogram,
+    addObservableCounter,
+    addObservableGauge,
+    addObservableUpDownCounter,
+    addUpDownCounter,
+    observe,
+} from './metric.functions';
 
 @Injectable()
 export class MetricService {
-  protected meter: Meter;
-  protected intrumentation = new Map();
+    public addCounter(name: string, options?: MetricOptions): MetricInterface {
+        return addCounter(name, options);
+    }
 
-  constructor() {
-    this.meter = otel.metrics.getMeter("opentelemetry-custom-metrics");
-  }
+    public addHistogram(name: string, options?: MetricOptions): MetricInterface {
+        return addHistogram(name, options);
+    }
 
-  public addCounter(name: string, options?: MetricAttributes): MetricInterface {
-    return addCounter(name, options);
-  }
+    public addObservableCounter(name: string, options?: MetricOptions): MetricInterface {
+        return addObservableCounter(name, options);
+    }
 
-  public addHistogram(name: string, options?: MetricAttributes): MetricInterface {
-    return addHistogram(name, options);
-  }
+    public addObservableGauge(name: string, options?: MetricOptions): MetricInterface {
+        return addObservableGauge(name, options);
+    }
 
-  public addObservableGauge(name: string, options?: MetricAttributes): MetricInterface {
-    return addObservableGauge(name, options);
-  }
+    public addUpDownCounter(name: string, options?: MetricOptions): MetricInterface {
+        return addUpDownCounter(name, options);
+    }
 
-  public observe(name: string, value: number): void {
-    return observe(name, value);
-  }
+    public addObservableUpDownCounter(name: string, options?: MetricOptions): MetricInterface {
+        return addObservableUpDownCounter(name, options);
+    }
+
+    public observe(name: string, value: number): void {
+        return observe(name, value);
+    }
 }

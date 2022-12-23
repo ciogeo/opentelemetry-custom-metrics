@@ -8,9 +8,8 @@ function TimeToProcessMetric() {
         const handlerName = propertyKey;
         const originalMethod = descriptor.value;
         descriptor.value = async function (...args) {
-            const descriptorThis = this;
             const start = Date.now();
-            const result = await originalMethod.apply(descriptorThis, args);
+            const result = await originalMethod.apply(this, args);
             const duration = Date.now() - start;
             const timeToProcessHistogram = metric_functions_1.addHistogram(`${className}_${handlerName}_time_histogram`, {
                 description: `Time to process ${className}.${handlerName}`,

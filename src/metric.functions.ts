@@ -1,51 +1,77 @@
-import otel, { Meter, MetricAttributes } from "@opentelemetry/api";
-import { OPENTELEMETRY_CUSTOM_METRICS } from "./constants";
-import { MetricType } from "./metric.type";
-import { CounterMetricService } from "./metrics/counter-metric.service";
-import { HistogramMetricService } from "./metrics/histogram-metric.service";
-import { MetricInterface } from "./metrics/metric.interface";
-import { ObservableGaugeMetriService } from "./metrics/observable-gauge-metric.service";
+import otel, { MetricOptions } from '@opentelemetry/api';
+import { OPENTELEMETRY_CUSTOM_METRICS } from './constants';
+import { MetricType } from './metric.type';
+import { CounterMetric } from './metrics/counter.metric';
+import { HistogramMetric } from './metrics/histogram.metric';
+import { MetricInterface } from './metrics/metric.interface';
+import { ObservableCounterMetric } from './metrics/observable-counter.metric';
+import { ObservableGaugeMetric } from './metrics/observable-gauge.metric';
+import { ObservableUpDownCounterMetric } from './metrics/observable-up-down-counter.metric';
+import { UpDownCounterMetric } from './metrics/up-down-counter.metric';
 
-export const intrumentation = new Map();
+const intrumentation = new Map();
 
-export function addCounter(name: string, options?: MetricAttributes): MetricInterface {
-  return addInstrumentation(MetricType.COUNTER, name, options);
+export function addCounter(name: string, options?: MetricOptions): MetricInterface {
+    return addInstrumentation(MetricType.COUNTER, name, options);
 }
 
-export function addHistogram(name: string, options?: MetricAttributes): MetricInterface {
-  return addInstrumentation(MetricType.HISTOGRAM, name, options);
+export function addHistogram(name: string, options?: MetricOptions): MetricInterface {
+    return addInstrumentation(MetricType.HISTOGRAM, name, options);
 }
 
-export function addObservableGauge(name: string, options?: MetricAttributes): MetricInterface {
-  return addInstrumentation(MetricType.OBSERVABLE_GAUGE, name, options);
+export function addObservableCounter(name: string, options?: MetricOptions): MetricInterface {
+    return addInstrumentation(MetricType.OBSERVABLE_COUNTER, name, options);
+}
+
+export function addObservableGauge(name: string, options?: MetricOptions): MetricInterface {
+    return addInstrumentation(MetricType.OBSERVABLE_GAUGE, name, options);
+}
+
+export function addUpDownCounter(name: string, options?: MetricOptions): MetricInterface {
+    return addInstrumentation(MetricType.UP_DOWN_COUNTER, name, options);
+}
+
+export function addObservableUpDownCounter(name: string, options?: MetricOptions): MetricInterface {
+    return addInstrumentation(MetricType.OBSERVABLE_UP_DOWN_COUNTER, name, options);
 }
 
 export function observe(name: string, value: number): void {
-  if (!this.intrumentation.has(name)) {
-    throw new Error(`Instrumentation ${name} not found`);
-  }
+    if (!this.intrumentation.has(name)) {
+        throw new Error(`Instrumentation ${name} not found`);
+    }
 
-  intrumentation.get(name).observe(value);
+    intrumentation.get(name).observe(value);
 }
 
-function addInstrumentation(type: string, name: string, options?: MetricAttributes): MetricInterface {
-  if (intrumentation.has(name)) {
+function addInstrumentation(type: string, name: string, options?: MetricOptions): MetricInterface {
+    if (intrumentation.has(name)) {
+        return intrumentation.get(name);
+    }
+
+    const meter = otel.metrics.getMeterProvider().getMeter(OPENTELEMETRY_CUSTOM_METRICS);
+
+    switch (type) {
+        case MetricType.COUNTER:
+            intrumentation.set(name, new CounterMetric(meter, name, options));
+            break;
+        case MetricType.HISTOGRAM:
+            intrumentation.set(name, new HistogramMetric(meter, name, options));
+            break;
+        case MetricType.OBSERVABLE_COUNTER:
+            intrumentation.set(name, new ObservableCounterMetric(meter, name, options));
+            break;
+        case MetricType.OBSERVABLE_GAUGE:
+            intrumentation.set(name, new ObservableGaugeMetric(meter, name, options));
+            break;
+        case MetricType.UP_DOWN_COUNTER:
+            intrumentation.set(name, new UpDownCounterMetric(meter, name, options));
+            break;
+        case MetricType.OBSERVABLE_UP_DOWN_COUNTER:
+            intrumentation.set(name, new ObservableUpDownCounterMetric(meter, name, options));
+            break;
+        default:
+            throw new Error(`Metric type ${type} not supported`);
+    }
+
     return intrumentation.get(name);
-  }
-
-  const meter = otel.metrics.getMeterProvider().getMeter(OPENTELEMETRY_CUSTOM_METRICS);
-
-  if (type === MetricType.COUNTER) {
-    intrumentation.set(name, new CounterMetricService(meter, name, options));
-  } else if (type === MetricType.HISTOGRAM) {
-    intrumentation.set(name, new HistogramMetricService(meter, name, options));
-  } else if (type === MetricType.OBSERVABLE_GAUGE) {
-    intrumentation.set(name, new ObservableGaugeMetriService(meter, name, options));
-  }
-
-  if (!intrumentation.has(name)) {
-    throw new Error(`Instrumentation ${name} not found`);
-  }
-
-  return intrumentation.get(name);
 }

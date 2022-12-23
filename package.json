@@ -15,10 +15,10 @@
   },
   "keywords": [
     "opentelemetry",
-    "nodejs",
     "nestjs",
     "metrics",
     "stats",
+    "prometheus",
     "access",
     "time"
   ],
