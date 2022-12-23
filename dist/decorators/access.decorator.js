@@ -7,8 +7,7 @@ function AccessMetric(name, options) {
         const className = target.constructor.name;
         const handlerName = propertyKey;
         const originalMethod = descriptor.value;
-        descriptor.value = async function (...args) {
-            const result = await originalMethod.apply(this, args);
+        const wrappedMethod = function PropertyDescriptor(...args) {
             if (!name) {
                 name = `${className}_${handlerName}_access_counter`;
             }
@@ -19,8 +18,12 @@ function AccessMetric(name, options) {
             }
             const accessCounter = metric_functions_1.addCounter(`${name}`, options);
             accessCounter.observe(1);
-            return result;
+            return originalMethod.apply(this, args);
         };
+        descriptor.value = wrappedMethod;
+        Reflect.getMetadataKeys(originalMethod).forEach((metadataKey) => {
+            Reflect.defineMetadata(metadataKey, Reflect.getMetadata(metadataKey, originalMethod), wrappedMethod);
+        });
         return descriptor;
     };
 }

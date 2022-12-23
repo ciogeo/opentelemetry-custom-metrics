@@ -7,16 +7,16 @@ function TimeToProcessMetric(name, options) {
         const className = target.constructor.name;
         const handlerName = propertyKey;
         const originalMethod = descriptor.value;
-        descriptor.value = async function (...args) {
+        const wrappedMethod = async function PropertyDescriptor(...args) {
             const start = Date.now();
             const result = await originalMethod.apply(this, args);
             const duration = Date.now() - start;
             if (!name) {
-                name = `${className}_${handlerName}_time`;
+                name = `${className}_${handlerName}_access_counter`;
             }
             if (!options) {
                 options = {
-                    description: `Time to process ${className}.${handlerName}`,
+                    description: `Number of times ${className}.${handlerName} was called`,
                 };
             }
             const timeToProcessHistogram = metric_functions_1.addHistogram(`${name}_histogram`, options);
@@ -25,6 +25,10 @@ function TimeToProcessMetric(name, options) {
             timeToProcessGauge.observe(duration);
             return result;
         };
+        descriptor.value = wrappedMethod;
+        Reflect.getMetadataKeys(originalMethod).forEach((metadataKey) => {
+            Reflect.defineMetadata(metadataKey, Reflect.getMetadata(metadataKey, originalMethod), wrappedMethod);
+        });
         return descriptor;
     };
 }

@@ -7,18 +7,18 @@ export function TimeToProcessMetric(name?: string, options?: MetricOptions): Met
         const handlerName = propertyKey;
         const originalMethod = descriptor.value;
 
-        descriptor.value = async function (...args: any[]) {
+        const wrappedMethod = async function PropertyDescriptor(...args: any[]) {
             const start = Date.now();
             const result = await originalMethod.apply(this, args);
             const duration = Date.now() - start;
 
             if (!name) {
-                name = `${className}_${handlerName}_time`;
+                name = `${className}_${handlerName}_access_counter`;
             }
 
             if (!options) {
                 options = {
-                    description: `Time to process ${className}.${handlerName}`,
+                    description: `Number of times ${className}.${handlerName} was called`,
                 };
             }
 
@@ -30,6 +30,12 @@ export function TimeToProcessMetric(name?: string, options?: MetricOptions): Met
 
             return result;
         };
+
+        descriptor.value = wrappedMethod;
+
+        Reflect.getMetadataKeys(originalMethod).forEach((metadataKey) => {
+            Reflect.defineMetadata(metadataKey, Reflect.getMetadata(metadataKey, originalMethod), wrappedMethod);
+        });
 
         return descriptor;
     };
