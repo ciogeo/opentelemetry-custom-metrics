@@ -10,6 +10,7 @@ import { ObservableUpDownCounterMetric } from './metrics/observable-up-down-coun
 import { UpDownCounterMetric } from './metrics/up-down-counter.metric';
 
 const intrumentation = new Map();
+const intrumentationCounter = new Map();
 
 export function addCounter(name: string, options?: MetricOptions): MetricInterface {
     return addInstrumentation(MetricType.COUNTER, name, options);
@@ -36,7 +37,7 @@ export function addObservableUpDownCounter(name: string, options?: MetricOptions
 }
 
 export function observe(name: string, value: number): void {
-    if (!this.intrumentation.has(name)) {
+    if (!intrumentation.has(name)) {
         throw new Error(`Instrumentation ${name} not found`);
     }
 
@@ -44,8 +45,10 @@ export function observe(name: string, value: number): void {
 }
 
 function addInstrumentation(type: string, name: string, options?: MetricOptions): MetricInterface {
-    if (intrumentation.has(name)) {
-        return intrumentation.get(name);
+    const counter = intrumentationCounter.get(name) ?? 0;
+
+    if (intrumentation.has(name) && counter > 0) {
+        return addInstrumentation(type, `${name}_${counter + 1}`, options);
     }
 
     const meter = otel.metrics.getMeterProvider().getMeter(OPENTELEMETRY_CUSTOM_METRICS);
@@ -72,6 +75,8 @@ function addInstrumentation(type: string, name: string, options?: MetricOptions)
         default:
             throw new Error(`Metric type ${type} not supported`);
     }
+
+    intrumentationCounter.set(name, counter + 1);
 
     return intrumentation.get(name);
 }

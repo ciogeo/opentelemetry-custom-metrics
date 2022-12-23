@@ -38,6 +38,6 @@ export class MetricService {
     }
 
     public observe(name: string, value: number): void {
-        return observe(name, value);
+        observe(name, value);
     }
 }
