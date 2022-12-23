@@ -29,7 +29,7 @@ let MetricService = class MetricService {
         return metric_functions_1.addObservableUpDownCounter(name, options);
     }
     observe(name, value) {
-        return metric_functions_1.observe(name, value);
+        metric_functions_1.observe(name, value);
     }
 };
 MetricService = __decorate([

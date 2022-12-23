@@ -11,6 +11,7 @@ const observable_gauge_metric_1 = require("./metrics/observable-gauge.metric");
 const observable_up_down_counter_metric_1 = require("./metrics/observable-up-down-counter.metric");
 const up_down_counter_metric_1 = require("./metrics/up-down-counter.metric");
 const intrumentation = new Map();
+const intrumentationCounter = new Map();
 function addCounter(name, options) {
     return addInstrumentation(metric_type_1.MetricType.COUNTER, name, options);
 }
@@ -36,15 +37,17 @@ function addObservableUpDownCounter(name, options) {
 }
 exports.addObservableUpDownCounter = addObservableUpDownCounter;
 function observe(name, value) {
-    if (!this.intrumentation.has(name)) {
+    if (!intrumentation.has(name)) {
         throw new Error(`Instrumentation ${name} not found`);
     }
     intrumentation.get(name).observe(value);
 }
 exports.observe = observe;
 function addInstrumentation(type, name, options) {
-    if (intrumentation.has(name)) {
-        return intrumentation.get(name);
+    var _a;
+    const counter = (_a = intrumentationCounter.get(name)) !== null && _a !== void 0 ? _a : 0;
+    if (intrumentation.has(name) && counter > 0) {
+        return addInstrumentation(type, `${name}_${counter + 1}`, options);
     }
     const meter = api_1.default.metrics.getMeterProvider().getMeter(constants_1.OPENTELEMETRY_CUSTOM_METRICS);
     switch (type) {
@@ -69,6 +72,7 @@ function addInstrumentation(type, name, options) {
         default:
             throw new Error(`Metric type ${type} not supported`);
     }
+    intrumentationCounter.set(name, counter + 1);
     return intrumentation.get(name);
 }
 //# sourceMappingURL=metric.functions.js.map
