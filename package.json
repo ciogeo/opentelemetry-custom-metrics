@@ -52,6 +52,9 @@
       "main"
     ]
   },
+  "files": [
+    "dist"
+  ],
   "homepage": "https://github.com/ciogeo/opentelemetry-custom-metrics#readme",
   "jest": {
     "moduleFileExtensions": [
