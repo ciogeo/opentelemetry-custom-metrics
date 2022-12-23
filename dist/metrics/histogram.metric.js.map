@@ -1,0 +1,1 @@
+{"version":3,"file":"histogram.metric.js","sourceRoot":"","sources":["../../src/metrics/histogram.metric.ts"],"names":[],"mappings":";;;AAGA,MAAa,eAAe;IAGxB,YAAY,KAAY,EAAE,IAAY,EAAE,OAAuB;QAC3D,IAAI,CAAC,SAAS,GAAG,KAAK,CAAC,eAAe,CAAC,IAAI,EAAE,OAAO,CAAC,CAAC;IAC1D,CAAC;IAEM,OAAO,CAAC,KAAa;QACxB,IAAI,CAAC,SAAS,CAAC,MAAM,CAAC,KAAK,CAAC,CAAC;IACjC,CAAC;CACJ;AAVD,0CAUC"}
