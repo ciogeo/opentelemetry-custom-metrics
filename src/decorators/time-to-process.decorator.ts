@@ -13,12 +13,12 @@ export function TimeToProcessMetric(name?: string, options?: MetricOptions): Met
             const duration = Date.now() - start;
 
             if (!name) {
-                name = `${className}_${handlerName}_access_counter`;
+                name = `${className}_${handlerName}_time`;
             }
 
             if (!options) {
                 options = {
-                    description: `Number of times ${className}.${handlerName} was called`,
+                    description: `Time to process ${className}.${handlerName}`,
                 };
             }
 
