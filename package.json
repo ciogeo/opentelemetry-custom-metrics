@@ -6,7 +6,7 @@
   "types": "dist/index.d.ts",
   "scripts": {
     "clean": "rimraf build/*",
-    "compile": "tsc --project tsconfig.build.json",
+    "build": "tsc --project tsconfig.build.json",
     "test": "jest",
     "test:watch": "jest --watch",
     "test:cov": "jest --coverage",
