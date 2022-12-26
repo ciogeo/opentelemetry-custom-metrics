@@ -1,15 +1,17 @@
 # Opentelemetry Custom Metrics for NestJS
 
+## Description
+
+[OpenTelemetry](https://opentelemetry.io/) module for [Nest](https://github.com/nestjs/nest).
+
 ## Install
 
-```
-npm i opentelemetry-custom-metrics --save
+```bash
+npm i opentelemetry-custom-metrics @opentelemetry/sdk-node --save
 ``` 
 
-Other required dependencies:
-```
-@opentelemetry/api
-@opentelemetry/sdk-node
+Other required dependencies for Prometheus config:
+```bash
 @opentelemetry/exporter-prometheus
 ```
 
@@ -17,7 +19,7 @@ Other required dependencies:
 
 ### Create otelSDK.ts file
 
-```
+```ts
 import * as process from 'process';
 import { NodeSDK } from '@opentelemetry/sdk-node';
 import { PrometheusExporter } from '@opentelemetry/exporter-prometheus';
@@ -25,7 +27,7 @@ import { AsyncLocalStorageContextManager } from '@opentelemetry/context-async-ho
 
 const otelSDK = new NodeSDK({
     metricReader: new PrometheusExporter({
-        port: 9090,
+        port: 8081,
     }),
     contextManager: new AsyncLocalStorageContextManager(),
 });
@@ -45,7 +47,7 @@ process.on('SIGTERM', () => {
 
 ### Add otelSDK to your main.ts
 
-```
+```ts
 import otelSDK from './otelSDK';
 
 async function bootstrap() {
@@ -55,7 +57,7 @@ async function bootstrap() {
 
 ### Import OpenTelemetryCustomMetricsModule in your app.module.ts
 
-```
+```ts
 import { OpenTelemetryCustomMetricsModule } from 'opentelemetry-custom-metrics';
 
 @Module({
@@ -67,11 +69,11 @@ import { OpenTelemetryCustomMetricsModule } from 'opentelemetry-custom-metrics';
 ### Add decorators to your methods
 
 app.controller.ts
-```
+```ts
 import { AccessMetric, TimeToProcessMetric } from 'opentelemetry-custom-metrics';
 ```
 
-```
+```ts
 @AccessMetric()
 @TimeToProcessMetric()
 public async handle(): Promise<void> {
@@ -84,7 +86,7 @@ public async handle(): Promise<void> {
 
 ### Add your own custom metrics
 
-```
+```ts
 import { MetricService, MetricType } from 'opentelemetry-custom-metrics';
 
 constructor(private metricService: MetricService) {
@@ -107,4 +109,4 @@ handle() {
 }
 ```
 
-Go to http://localhost:9090/metrics to see the metrics
+Go to http://localhost:8081/metrics to see the metrics
