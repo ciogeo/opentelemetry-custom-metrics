@@ -1,4 +1,4 @@
-# Opentelemetry Custom Metrics for NestJS
+# OpenTelemetry Custom Metrics for NestJS
 
 ## Description
 

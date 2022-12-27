@@ -1,7 +1,7 @@
 {
   "name": "opentelemetry-custom-metrics",
   "version": "1.0.28",
-  "description": "Allows you to add custom opentelemetry metrics in your NestJS application",
+  "description": "Allows you to add custom OpenTelemetry metrics in your NestJS application",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "scripts": {
