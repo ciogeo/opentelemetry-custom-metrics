@@ -1,3 +1,7 @@
+[![CodeQL](https://github.com/ciogeo/opentelemetry-custom-metrics/actions/workflows/codeql.yml/badge.svg?branch=main)](https://github.com/ciogeo/opentelemetry-custom-metrics/actions/workflows/codeql.yml)
+[![Node.js CI](https://github.com/ciogeo/opentelemetry-custom-metrics/actions/workflows/node.js.yml/badge.svg?branch=main)](https://github.com/ciogeo/opentelemetry-custom-metrics/actions/workflows/node.js.yml)
+[![OpenTelemetry Custom Metrics for NestJS](https://github.com/ciogeo/opentelemetry-custom-metrics/actions/workflows/npm-publish.yml/badge.svg)](https://github.com/ciogeo/opentelemetry-custom-metrics/actions/workflows/npm-publish.yml)
+
 # OpenTelemetry Custom Metrics for NestJS
 
 ## Description
