@@ -1,4 +1,4 @@
-import otel, { MetricOptions } from '@opentelemetry/api';
+import otel, { Attributes, Context, MetricOptions } from '@opentelemetry/api';
 import { OPENTELEMETRY_CUSTOM_METRICS } from './constants';
 import { MetricType } from './metric.type';
 import { CounterMetric } from './metrics/counter.metric';
@@ -35,12 +35,12 @@ export function addObservableUpDownCounter(name: string, options?: MetricOptions
     return addInstrumentation(MetricType.OBSERVABLE_UP_DOWN_COUNTER, name, options);
 }
 
-export function observe(name: string, value: number): void {
+export function observe(name: string, value: number, attributes?: Attributes, context?: Context): void {
     if (!intrumentation.has(name)) {
         throw new Error(`Instrumentation ${name} not found`);
     }
 
-    intrumentation.get(name).observe(value);
+    intrumentation.get(name).observe(value, attributes, context);
 }
 
 function addInstrumentation(type: string, name: string, options?: MetricOptions): MetricInterface {

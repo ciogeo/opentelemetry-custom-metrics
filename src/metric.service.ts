@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { MetricOptions } from '@opentelemetry/api';
+import { Attributes, Context, MetricOptions } from '@opentelemetry/api';
 import { MetricInterface } from './metrics/metric.interface';
 import {
     addCounter,
@@ -37,7 +37,7 @@ export class MetricService {
         return addObservableUpDownCounter(name, options);
     }
 
-    public observe(name: string, value: number): void {
-        observe(name, value);
+    public observe(name: string, value: number, attributes?: Attributes, context?: Context): void {
+        observe(name, value, attributes, context);
     }
 }
