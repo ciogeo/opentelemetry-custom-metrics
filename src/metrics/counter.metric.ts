@@ -1,4 +1,4 @@
-import { Counter, Meter, MetricOptions } from '@opentelemetry/api';
+import { Attributes, Context, Counter, Meter, MetricOptions } from '@opentelemetry/api';
 import { MetricInterface } from './metric.interface';
 
 export class CounterMetric implements MetricInterface {
@@ -8,7 +8,7 @@ export class CounterMetric implements MetricInterface {
         this.counter = meter.createCounter(name, options);
     }
 
-    public observe(value: number): void {
-        this.counter.add(value);
+    public observe(value: number, attributes?: Attributes, context?: Context): void {
+        this.counter.add(value, attributes, context);
     }
 }

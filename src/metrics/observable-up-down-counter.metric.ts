@@ -1,4 +1,4 @@
-import { Meter, MetricOptions, ObservableUpDownCounter } from '@opentelemetry/api';
+import { Attributes, Meter, MetricOptions, ObservableUpDownCounter } from '@opentelemetry/api';
 import { MetricInterface } from './metric.interface';
 
 export class ObservableUpDownCounterMetric implements MetricInterface {
@@ -8,9 +8,9 @@ export class ObservableUpDownCounterMetric implements MetricInterface {
         this.counter = meter.createObservableUpDownCounter(name, options);
     }
 
-    public observe(value: number): void {
+    public observe(value: number, attributes?: Attributes): void {
         this.counter.addCallback((observableResult) => {
-            observableResult.observe(value);
+            observableResult.observe(value, attributes);
         });
     }
 }

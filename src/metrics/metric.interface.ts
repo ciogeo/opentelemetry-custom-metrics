@@ -1,3 +1,5 @@
+import { Attributes, Context } from '@opentelemetry/api';
+
 export interface MetricInterface {
-    observe(value: number): void;
+    observe(value: number, attributes?: Attributes, context?: Context): void;
 }

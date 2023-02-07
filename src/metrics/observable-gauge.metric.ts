@@ -1,4 +1,4 @@
-import { Meter, MetricOptions, ObservableGauge } from '@opentelemetry/api';
+import { Attributes, Meter, MetricOptions, ObservableGauge } from '@opentelemetry/api';
 import { MetricInterface } from './metric.interface';
 
 export class ObservableGaugeMetric implements MetricInterface {
@@ -8,9 +8,9 @@ export class ObservableGaugeMetric implements MetricInterface {
         this.gauge = meter.createObservableGauge(name, options);
     }
 
-    public observe(value: number): void {
+    public observe(value: number, attributes?: Attributes): void {
         this.gauge.addCallback((observableResult) => {
-            observableResult.observe(value);
+            observableResult.observe(value, attributes);
         });
     }
 }

@@ -1,4 +1,4 @@
-import { Histogram, Meter, MetricOptions } from '@opentelemetry/api';
+import { Attributes, Context, Histogram, Meter, MetricOptions } from '@opentelemetry/api';
 import { MetricInterface } from './metric.interface';
 
 export class HistogramMetric implements MetricInterface {
@@ -8,7 +8,7 @@ export class HistogramMetric implements MetricInterface {
         this.histogram = meter.createHistogram(name, options);
     }
 
-    public observe(value: number): void {
-        this.histogram.record(value);
+    public observe(value: number, attributes?: Attributes, context?: Context): void {
+        this.histogram.record(value, attributes, context);
     }
 }
